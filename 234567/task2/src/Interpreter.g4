@@ -26,7 +26,7 @@ ene
     :expr (SEMICOLON expr)*
 ;
 expr
-    :	ID                                  #Indentifier
+    :	ID                                  #Identifier
     |	INTLIT                              #Int
     |	BOOLLIT                             #Boolean
     |	ID Assign expr                      #Assignment
@@ -38,7 +38,7 @@ expr
     |	REPEAT block UNTIL expr             #RepeatLoop
     |	PRINT expr                          #Print
     |	SPACE                               #Space
-    |	NEWLINE                           #Newline
+    |	NEWLINE                             #Newline
     |	SKIPP                               #Skip
 ;
 args

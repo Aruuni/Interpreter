@@ -114,31 +114,25 @@ public class InterpreterTask2 {
                             addi        sp, sp, -4
                         exit2:
                     .end_macro
-                    
-                    .macro    Leq
-                            Popt1t2
-                            blt         t1, t2, exit
-                            sw          zero, (sp)
-                            addi        sp, sp, -4
-                            j           exit2
-                        exit:
-                            li          t0, 1
-                            sw          t0, (sp)
-                            addi        sp, sp, -4
-                        exit2:
+                    //not fine
+                    .macro Leq
+                        Popt1t2
+                        li          t0, 1
+                        sw          t0, (sp)
+                        ble         t2, t1, exit
+                        sw          zero, (sp)
+                    exit:
+                        addi        sp, sp, -4
                     .end_macro
                     
-                    .macro    Geq
-                            Popt1t2
-                            blt         t2, t1, exit
-                            sw          zero, (sp)
-                            addi        sp, sp, -4
-                            j           exit2
-                        exit:
-                            li          t0, 1
-                            sw          t0, (sp)
-                            addi        sp, sp, -4
-                        exit2:
+                    .macro Geq
+                        Popt1t2
+                        li          t0, 1
+                        sw          t0, (sp)
+                        ble         t2, t1, exit
+                        sw          zero, (sp)
+                    exit:
+                        addi        sp, sp, -4
                     .end_macro
                     
                     .macro    Or

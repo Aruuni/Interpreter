@@ -71,7 +71,7 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
                 """);
         return sb.toString();}
     @Override
-    public String visitIndentifier(InterpreterParser.IndentifierContext ctx) {
+    public String visitIdentifier(InterpreterParser.IdentifierContext ctx) {
         StringBuilder sb = new StringBuilder();
         sb.append(
                 String.format("""
@@ -102,7 +102,7 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
             sb.append(visit(ctx.expr()));
             sb.append(
                     String.format("""
-                    PopReg      x%2d
+                    PushReg      x%2d
                 """,registers.peek().get(ctx.ID().getText())));
             return sb.toString();}
     @Override

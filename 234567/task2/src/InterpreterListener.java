@@ -87,17 +87,17 @@ public interface InterpreterListener extends ParseTreeListener {
 	 */
 	void exitEne(InterpreterParser.EneContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code Indentifier}
+	 * Enter a parse tree produced by the {@code Identifier}
 	 * labeled alternative in {@link InterpreterParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterIndentifier(InterpreterParser.IndentifierContext ctx);
+	void enterIdentifier(InterpreterParser.IdentifierContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code Indentifier}
+	 * Exit a parse tree produced by the {@code Identifier}
 	 * labeled alternative in {@link InterpreterParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitIndentifier(InterpreterParser.IndentifierContext ctx);
+	void exitIdentifier(InterpreterParser.IdentifierContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code Int}
 	 * labeled alternative in {@link InterpreterParser#expr}.
