@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b23ea5bb-c43a-49b0-ab07-858203a59415" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/234567">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$/234567">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/234567/task1">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/234567/task2">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/234567/task1:InterpreterTask1.main()">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/234567/task1/InterpreterTask1.main()">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2Hj7koPKKRCI0gmDJ5gaXScO771" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/mihai/Downloads/intellij-visual-studio-code-dark-plus.jar&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\mihai\Desktop\234567\234567\task1\src" />
+      <recent name="C:\Users\mihai\Desktop\234567\234567\task1\src\gen" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="gradle task1:run" />
+      <command value="gradle ./gradlew wrapper --version" />
+      <command value="./gradlew wrapper --version " />
+      <command value="234567 [./gradlew wrapper]" />
+      <command value="gradle :wrapper" />
+      <command value="gradle  --version" />
+      <command value="./gradlew wrapper " />
+      <command value="gradle wrapper" />
+      <command value="--warning-mode all" />
+      <command value="gradle --warning-mode all" />
+    </option>
+  </component>
+  <component name="RunManager" selected="Batch.run-task1">
+    <configuration name="InterpreterTask1" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="InterpreterTask1" />
+      <module name="compilers-coursework.task1.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="gradlew" type="BatchConfigurationType" factoryName="Batch" temporary="true">
+      <module name="compilers-coursework" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="WORKING_DIRECTORY" value="./234567" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SCRIPT_NAME" value="gradlew.bat" />
+      <option name="PARAMETERS" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="run-task1" type="BatchConfigurationType" factoryName="Batch">
+      <module name="compilers-coursework" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="WORKING_DIRECTORY" value="./234567" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SCRIPT_NAME" value="run-task1.bat" />
+      <option name="PARAMETERS" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="234567 [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/234567" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="jar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="234567" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/234567/task1/InterpreterTask1.main()" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="234567:task1 [compileJava]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/234567/task1" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="compileJava" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="234567:task2 [help]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/234567/task2" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="help" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="249951" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="249951" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.InterpreterTask1" />
+      <item itemvalue="Batch.run-task1" />
+      <item itemvalue="Batch.gradlew" />
+      <item itemvalue="Gradle.234567 [jar]" />
+      <item itemvalue="Gradle.234567:task1 [compileJava]" />
+      <item itemvalue="Gradle.234567:task2 [help]" />
+      <item itemvalue="Gradle.234567" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.234567:task1 [compileJava]" />
+        <item itemvalue="Gradle.234567:task2 [help]" />
+        <item itemvalue="Gradle.234567 [jar]" />
+        <item itemvalue="Batch.gradlew" />
+        <item itemvalue="Gradle.234567" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b23ea5bb-c43a-49b0-ab07-858203a59415" name="Changes" comment="" />
+      <created>1668786788054</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1668786788054</updated>
+      <workItem from="1668786789111" duration="11660000" />
+      <workItem from="1668804947837" duration="9101000" />
+      <workItem from="1668815911489" duration="4689000" />
+      <workItem from="1668821625740" duration="4097000" />
+      <workItem from="1668864141240" duration="10294000" />
+      <workItem from="1668876235730" duration="189000" />
+      <workItem from="1668876484525" duration="347000" />
+      <workItem from="1668876861908" duration="733000" />
+      <workItem from="1668884839036" duration="2647000" />
+      <workItem from="1668888864357" duration="1545000" />
+      <workItem from="1668893505413" duration="3282000" />
+      <workItem from="1668899049067" duration="6397000" />
+      <workItem from="1668952338636" duration="13153000" />
+      <workItem from="1668972448496" duration="4906000" />
+      <workItem from="1669046012329" duration="12881000" />
+      <workItem from="1669068563164" duration="1326000" />
+      <workItem from="1669118592630" duration="496000" />
+      <workItem from="1669119101294" duration="461000" />
+      <workItem from="1669119577658" duration="46000" />
+      <workItem from="1669119637386" duration="190000" />
+      <workItem from="1669119846736" duration="59000" />
+      <workItem from="1669119917363" duration="39000" />
+      <workItem from="1669119965958" duration="109000" />
+      <workItem from="1669120085565" duration="4985000" />
+      <workItem from="1669125143893" duration="413000" />
+      <workItem from="1669125573235" duration="2037000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.dl" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.ArrayIndexOutOfBoundsException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

@@ -1,0 +1,6 @@
+# Project exclude paths
+/234567/.gradle/
+/234567/task1/build/
+/234567/task1/build/classes/java/main/
+/234567/task2/build/
+/234567/task2/build/classes/java/main/
