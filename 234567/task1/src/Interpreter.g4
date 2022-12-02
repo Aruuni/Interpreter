@@ -26,7 +26,7 @@ ene
     :expr (SEMICOLON expr)*
 ;
 expr
-    :	ID                                  #Indentifier
+    :	ID                                  #Identifier
     |	INTLIT                              #Int
     |	BOOLLIT                             #Boolean
     |	ID Assign expr                      #Assignment

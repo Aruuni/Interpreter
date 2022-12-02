@@ -13,6 +13,7 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
         for (InterpreterParser.DeclaContext declaration : ctx.decla()) {
             registers.push(new HashMap<>());
             regOffset.push(10);
+            labelCounter = 10;
             sb.append(visit(declaration));
             registers.pop();
             regOffset.pop();}
@@ -53,8 +54,7 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
         for (int i = 0; i < ctx.ID().size(); ++i) {
             sb.append(
                     String.format("""
-                    lw          x%2d, 4(sp)
-                    addi        sp, sp, 4
+                    Push
                 """,i + regOffset.peek())
             );}
         return sb.toString();}

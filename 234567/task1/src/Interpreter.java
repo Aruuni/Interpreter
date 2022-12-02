@@ -43,7 +43,7 @@ public class Interpreter extends AbstractParseTreeVisitor<Object> implements Int
         for (int i = 0; i < ctx.expr().size(); i++) {returnValue = visit(ctx.expr(i));}
         return returnValue;}
     @Override
-    public Object visitIndentifier(InterpreterParser.IndentifierContext ctx) {return memory.peek().get(ctx.ID().getText());}
+    public Object visitIdentifier(InterpreterParser.IdentifierContext ctx) {return memory.peek().get(ctx.ID().getText());}
     @Override
     public Object visitAssignment(InterpreterParser.AssignmentContext ctx) {
         Object returnValue = visit(ctx.expr());

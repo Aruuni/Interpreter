@@ -1,20 +1,17 @@
-int main (int i1, bool flag)
-{
-int a := i1;
-bool b := flag;
-if ((f ( 10 ) == g ( 20 )) & b) then
-   { h ( 30, b ) }
-else
-   { j ( 3, 2, a  ) }
+int main(int n) {
+    int i := 0;
+    while (i < n) do {
+        print_row(i);
+        i := (i + 1)
+    };
+    0
 }
 
-int f ( int x )  { ( x + x ) }
-
-int g ( int a )  { a }
-
-int h ( int a, int b )  { ( b - a ) }
-
-int j ( int s, int t, int u )
-{
-    if (( s + t ) == ( s + u )) then { 20 } else { 30 }
+unit print_row(int n) {
+    int i := 0;
+    while (i < n) do {
+        print 1;
+        i := (i + 1)
+    };
+    print newline
 }

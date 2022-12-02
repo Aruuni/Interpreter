@@ -172,6 +172,7 @@ public class InterpreterTask2 {
         InterpreterCodeGenerator codegen = new InterpreterCodeGenerator();
         StringBuilder code = new StringBuilder();
         writer.write(code.append(codegen.visit(tree)).toString());
+        writer.close();
         System.out.println(stackMachineMacros + codegen.visit(tree));
 
     }

@@ -58,12 +58,12 @@ public interface InterpreterVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitEne(InterpreterParser.EneContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code Indentifier}
+	 * Visit a parse tree produced by the {@code Identifier}
 	 * labeled alternative in {@link InterpreterParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitIndentifier(InterpreterParser.IndentifierContext ctx);
+	T visitIdentifier(InterpreterParser.IdentifierContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code Int}
 	 * labeled alternative in {@link InterpreterParser#expr}.

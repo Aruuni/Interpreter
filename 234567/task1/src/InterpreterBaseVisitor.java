@@ -73,7 +73,7 @@ public class InterpreterBaseVisitor<T> extends AbstractParseTreeVisitor<T> imple
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitIndentifier(InterpreterParser.IndentifierContext ctx) { return visitChildren(ctx); }
+	@Override public T visitIdentifier(InterpreterParser.IdentifierContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

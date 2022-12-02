@@ -58,7 +58,7 @@ public class InterpreterChecker extends AbstractParseTreeVisitor<InterpreterType
         ctx.expr().forEach(this::visit);
         return visit(ctx.expr(ctx.expr().size()-1));}
     @Override
-    public InterpreterTypes visitIndentifier(InterpreterParser.IndentifierContext ctx) {
+    public InterpreterTypes visitIdentifier(InterpreterParser.IdentifierContext ctx) {
         if (fuctionDefinitions.containsKey(ctx.ID().getText())) {throw new InterpreterTypeException().clashedVarError();}
         if (!variables.containsKey(ctx.ID().getText())){throw new InterpreterTypeException().undefinedVarError();}
         return variables.get(ctx.ID().getText());}

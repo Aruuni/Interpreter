@@ -112,13 +112,13 @@ public class InterpreterBaseListener implements InterpreterListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIndentifier(InterpreterParser.IndentifierContext ctx) { }
+	@Override public void enterIdentifier(InterpreterParser.IdentifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIndentifier(InterpreterParser.IndentifierContext ctx) { }
+	@Override public void exitIdentifier(InterpreterParser.IdentifierContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
