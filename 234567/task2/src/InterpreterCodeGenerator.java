@@ -6,29 +6,53 @@ import java.util.*;
 public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> implements InterpreterVisitor<String>{
     private final Stack<HashMap<String, Integer>> registers = new Stack<>();
     private final Stack<Integer> regOffset = new Stack<>();
-    private int labelCounter = 0;
+    private Integer labelCounter = 0;
+    private final Stack<Integer> numOfArgs = new Stack<>();
     @Override
     public String visitProgram(InterpreterParser.ProgramContext ctx) {
         StringBuilder sb = new StringBuilder();
         for (InterpreterParser.DeclaContext declaration : ctx.decla()) {
             registers.push(new HashMap<>());
             regOffset.push(10);
-            labelCounter = 10;
+            labelCounter =0;
+            numOfArgs.push(declaration.paramdecla().ID().size());
             sb.append(visit(declaration));
+            regOffset.pop();
             registers.pop();
-            regOffset.pop();}
+            numOfArgs.pop();}
         return sb.toString();}
     @Override
     public String visitDecla(InterpreterParser.DeclaContext ctx) {
+        if (numOfArgs.peek() + registers.peek().size() > 22) {throw new RuntimeException("Too many local variables.");}
         StringBuilder sb = new StringBuilder();
+        //TODO these are the registers that are used for the arguments
         sb.append(String.format("""
                 %s:
                     lw          ra, 4(sp)
                     addi        sp, sp, 4
-                """,ctx.ID().getText()));
-        sb.append(visit(ctx.paramdecla()));
+                """, ctx.ID().getText()));
+        int regOffset = 10;
+        for (int i = 0; i < numOfArgs.size(); ++i) {
+            registers.peek().put(ctx.paramdecla().ID(i).getText(), i + regOffset);
+            sb.append(
+                    String.format("""
+                                        lw          x%2d, 4(sp)
+                                        addi        sp, sp, 4
+                                    """,
+                            i + regOffset
+                    )
+            );
+        }
+
+        regOffset = regOffset + numOfArgs.peek();
+
+        sb.append("""
+                    addi        sp, sp, 4
+                """
+        );
+        //TODO come back
         sb.append(visit(ctx.body()));
-        return sb.toString();}
+    return sb.toString();}
 
     @Override
     public String visitParamdecla(InterpreterParser.ParamdeclaContext ctx) {
@@ -37,39 +61,36 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
             sb.append(String.format("""
                     lw          x%2d, 4(sp)
                     addi        sp, sp, 4
-                """,
-                    i + regOffset.peek()
-            ));
-            registers.peek().put(ctx.ID(i).getText(), i + regOffset.peek());
-        }
-        return null;
-    }
-
-    @Override
-    public String visitBody(InterpreterParser.BodyContext ctx) {return visit(ctx.ene());}
-
-    @Override
-    public String visitVardecla(InterpreterParser.VardeclaContext ctx) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < ctx.ID().size(); ++i) {
-            sb.append(
-                    String.format("""
-                    Push
-                """,i + regOffset.peek())
-            );}
+                """,i + regOffset.peek()));
+            registers.peek().put(ctx.ID(i).getText(), i + regOffset.peek());}
         return sb.toString();}
     @Override
+    public String visitBody(InterpreterParser.BodyContext ctx) {return visit(ctx.ene());}
+    @Override
+    public String visitVardecla(InterpreterParser.VardeclaContext ctx) {return null;}
+    @Override
     public String visitBlock(InterpreterParser.BlockContext ctx) {
-        return visit(ctx.ene());}
+        StringBuilder sb = new StringBuilder();
+
+        //this makes ene redundant
+        for (int i = 0; i < ctx.ene().expr().size(); ++i) {
+            sb.append(visit(ctx.ene().expr(i)));
+            System.out.println(ctx.ene().expr(i).getText());
+        }
+        sb.append("""
+                ret
+            """);
+        return sb.toString();}
     @Override
     public String visitEne(InterpreterParser.EneContext ctx) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < ctx.expr().size(); i++) {
-            sb.append(visit(ctx.expr(i)));}
+        for (int i = 0; i < ctx.expr().size(); ++i) {
+            sb.append(visit(ctx.expr(i)));
+            System.out.println(ctx.expr(i).getText());}
         sb.append("""
                 ret
-                """);
-        return sb.toString();}
+            """);
+        return null;}
     @Override
     public String visitIdentifier(InterpreterParser.IdentifierContext ctx) {
         StringBuilder sb = new StringBuilder();
@@ -99,6 +120,7 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
     @Override
     public String visitAssignment(InterpreterParser.AssignmentContext ctx) {
             StringBuilder sb = new StringBuilder();
+            //TODO double check this
             sb.append(visit(ctx.expr()));
             sb.append(
                     String.format("""

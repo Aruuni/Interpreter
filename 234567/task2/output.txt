@@ -1,51 +1,45 @@
 main:
     lw          ra, 4(sp)
     addi        sp, sp, 4
-nullWhile_0:
+    lw          x10, 4(sp)
+    addi        sp, sp, 4
+    addi        sp, sp, 4
+    PushImm 0
+0    lw          x10, 4(sp)
+    addi        sp, sp, 4
+While_0:
     PushReg     x10
-    PushReg     xnull
+    PushReg     x10
     Leq
     PushImm     1
     LogicalXor
     JumpTrue    End-While_1
-    PushReg     xnull
-    PopReg      a10
-    jal         print_row
-    PushImm 1
-1    PushReg     xnull
-    Add
-    PopReg      xnull
-ret
-    Jump        While_0
+null    Jump        While_0
 End-While_1:
     PushImm 0
-0ret
+0    ret
 print_row:
     lw          ra, 4(sp)
     addi        sp, sp, 4
-nullWhile_2:
+    lw          x10, 4(sp)
+    addi        sp, sp, 4
+    addi        sp, sp, 4
+    PushImm 0
+0    lw          x10, 4(sp)
+    addi        sp, sp, 4
+While_0:
     PushReg     x10
-    PushReg     xnull
+    PushReg     x10
     Leq
     PushImm     1
     LogicalXor
-    JumpTrue    End-While_3
-    PushImm 1
-1    Pop         x1
-    li          a0, 1
-    mv          a1, x1
-    jal         print
-    PushImm 1
-1    PushReg     xnull
-    Add
-    PopReg      xnull
-ret
-    Jump        While_2
-End-While_3:
+    JumpTrue    End-While_1
+null    Jump        While_0
+End-While_1:
     PushImm     10
     PrintChar
     Pop         x1
     li          a0, 1
     mv          a1, x1
     jal         print
-ret
+    ret
