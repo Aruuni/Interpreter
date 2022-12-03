@@ -11,6 +11,9 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
     @Override
     public String visitProgram(InterpreterParser.ProgramContext ctx) {
         StringBuilder sb = new StringBuilder();
+        sb.append("""
+                    b main
+                """);
         for (InterpreterParser.DeclaContext declaration : ctx.decla()) {
             registers.push(new HashMap<>());
             regOffset.push(10);
@@ -31,25 +34,17 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
                     lw          ra, 4(sp)
                     addi        sp, sp, 4
                 """, ctx.ID().getText()));
-        int regOffset = 10;
         for (int i = 0; i < numOfArgs.size(); ++i) {
-            registers.peek().put(ctx.paramdecla().ID(i).getText(), i + regOffset);
+            registers.peek().put(ctx.paramdecla().ID(i).getText(), i + regOffset.peek());
             sb.append(
                     String.format("""
                                         lw          x%2d, 4(sp)
                                         addi        sp, sp, 4
-                                    """,
-                            i + regOffset
-                    )
-            );
-        }
-
-        regOffset = regOffset + numOfArgs.peek();
-
+                                    """,i + regOffset.peek()));}
+        regOffset.push(regOffset.peek() + numOfArgs.peek());
         sb.append("""
                     addi        sp, sp, 4
-                """
-        );
+                """);
         //TODO come back
         sb.append(visit(ctx.body()));
     return sb.toString();}
@@ -59,13 +54,24 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < ctx.ID().size(); ++i) {
             sb.append(String.format("""
-                    lw          x%2d, 4(sp)   #from param
-                    addi        sp, sp, 4     #from param
-                """,i + regOffset.peek()));
+                    lw          x%2d, 4(sp)
+                    addi        sp, sp, 4
+                    """,i + regOffset.peek()));
             registers.peek().put(ctx.ID(i).getText(), i + regOffset.peek());}
         return sb.toString();}
     @Override
-    public String visitBody(InterpreterParser.BodyContext ctx) {return visit(ctx.ene());}
+    public String visitBody(InterpreterParser.BodyContext ctx) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < ctx.vardecla().type().size(); i++) {
+            registers.peek().put(ctx.vardecla().ID(i).getText(), regOffset.peek()+i);
+            sb.append(ctx.vardecla().expr(i));
+            sb.append(String.format("""
+                    lw          x%2d, 0(sp)
+                    addi        sp, sp, -4
+                    """,regOffset.peek()+i));}
+
+        regOffset.push(regOffset.peek() + ctx.vardecla().type().size());
+        return visit(ctx.ene());}
     @Override
     public String visitVardecla(InterpreterParser.VardeclaContext ctx) {return null;}
     @Override
@@ -73,9 +79,10 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
     @Override
     public String visitEne(InterpreterParser.EneContext ctx) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < ctx.expr().size(); ++i) {
+        for (int i = 0; i < ctx.expr().size()-1; ++i) {
             sb.append(visit(ctx.expr(i)));
             System.out.println(ctx.expr(i).getText());}
+        sb.append(visit(ctx.expr(ctx.expr().size())));
         sb.append("""
                 ret
             """);
@@ -109,6 +116,8 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
             StringBuilder sb = new StringBuilder();
             //TODO double check this
             sb.append(visit(ctx.expr()));
+            registers.peek().put(ctx.ID().getText(), regOffset.peek());
+            regOffset.push(regOffset.peek() + 1);
             sb.append(String.format("""
                     PushReg      x%2d
                 """,registers.peek().get(ctx.ID().getText())));
