@@ -59,8 +59,8 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < ctx.ID().size(); ++i) {
             sb.append(String.format("""
-                    lw          x%2d, 4(sp)
-                    addi        sp, sp, 4
+                    lw          x%2d, 4(sp)   #from param
+                    addi        sp, sp, 4     #from param
                 """,i + regOffset.peek()));
             registers.peek().put(ctx.ID(i).getText(), i + regOffset.peek());}
         return sb.toString();}
@@ -69,18 +69,7 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
     @Override
     public String visitVardecla(InterpreterParser.VardeclaContext ctx) {return null;}
     @Override
-    public String visitBlock(InterpreterParser.BlockContext ctx) {
-        StringBuilder sb = new StringBuilder();
-
-        //this makes ene redundant
-        for (int i = 0; i < ctx.ene().expr().size(); ++i) {
-            sb.append(visit(ctx.ene().expr(i)));
-            System.out.println(ctx.ene().expr(i).getText());
-        }
-        sb.append("""
-                ret
-            """);
-        return sb.toString();}
+    public String visitBlock(InterpreterParser.BlockContext ctx) {return visit(ctx.ene());}
     @Override
     public String visitEne(InterpreterParser.EneContext ctx) {
         StringBuilder sb = new StringBuilder();
@@ -90,12 +79,11 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
         sb.append("""
                 ret
             """);
-        return null;}
+        return sb.toString();}
     @Override
     public String visitIdentifier(InterpreterParser.IdentifierContext ctx) {
         StringBuilder sb = new StringBuilder();
-        sb.append(
-                String.format("""
+        sb.append(String.format("""
                     PushReg     x%2d
                 """,registers.peek().get(ctx.ID().getText())));
         return sb.toString();}
@@ -104,16 +92,15 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
         StringBuilder sb = new StringBuilder();
         sb.append(
                 String.format("""
-                    PushImm %d
+                    PushImm     %d
                 """, Integer.parseInt(ctx.getText())));
-        sb.append(ctx.getText());
         return sb.toString();}
     @Override
     public String visitBoolean(InterpreterParser.BooleanContext ctx) {
         StringBuilder sb = new StringBuilder();
         sb.append(
                 String.format("""
-                    PushImm %d
+                    PushImm     %d
                 """, ctx.getText().equals("true") ? 1 : 0));
         sb.append(ctx.getText());
         return sb.toString();}
@@ -122,8 +109,7 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
             StringBuilder sb = new StringBuilder();
             //TODO double check this
             sb.append(visit(ctx.expr()));
-            sb.append(
-                    String.format("""
+            sb.append(String.format("""
                     PushReg      x%2d
                 """,registers.peek().get(ctx.ID().getText())));
             return sb.toString();}
@@ -187,8 +173,7 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < ctx.args().expr().size(); i++) {
             sb.append(visit(ctx.args().expr(i)));
-            sb.append(
-                    String.format("""
+            sb.append(String.format("""
                     PopReg      a%2d
                 """,i+regOffset.peek()));}
         sb.append(String.format("""
@@ -299,8 +284,7 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
     public String visitArgs(InterpreterParser.ArgsContext ctx) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < ctx.expr().size(); i++) {
-            sb.append(
-                    String.format("""
+            sb.append(String.format("""
                         Push        %s
                     """, ctx.expr(i).getText()));
         }
