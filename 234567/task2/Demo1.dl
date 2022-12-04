@@ -1,12 +1,11 @@
-  int main() {
-    int i := 50;
-    int j := 100;
-    int k := 150;
-    int l := 200;
-    int m := 250;
-    while (i >= 0) do {
-      i := (i - 1);
-      print i;
-      print newline
-    };
-    i }
+int main(int i) {
+         int j := 50;
+         print i;
+printhello()
+}
+
+unit printhello(){
+    print 50;
+    print newline
+
+}

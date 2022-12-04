@@ -15,14 +15,14 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
         StringBuilder sb = new StringBuilder();
         for (InterpreterParser.DeclaContext declaration : ctx.decla()) {
             registers.push(new HashMap<>());
-            regOffset.push(15);
+            regOffset.push(18);
             labelCounter =0;
             numOfArgs.push(declaration.paramdecla().ID().size());
             sb.append(visit(declaration));}
         return sb.toString();}
     @Override
     public String visitDecla(InterpreterParser.DeclaContext ctx) {
-        if (numOfArgs.peek() + registers.peek().size() > 22) {throw new RuntimeException("Too many local variables.");}
+        if (numOfArgs.peek() + registers.peek().size() > 28) {throw new RuntimeException("Too many local variables.");}
         StringBuilder sb = new StringBuilder();
         //TODO make this compatible with function calls
         sb.append(String.format("""
@@ -36,7 +36,10 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
                     lw          x%2d, 4(sp)
                     addi        sp, sp, 4
                 """,i + regOffset.peek()));}
-        regOffset.push(regOffset.peek() + numOfArgs.peek());
+        regOffset.push(regOffset.peek() + ctx.paramdecla().ID().size());
+        sb.append("""
+                    addi        sp, sp, 4
+                """);
         sb.append(visit(ctx.body()));
         sb.append("""
                 ret
@@ -104,35 +107,26 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
         //TODO finish
         StringBuilder sb = new StringBuilder();
         sb.append("""
-                    PreCall
+                    addi        sp, sp, 12
+                    sw          ra, 0(sp)
+                    sw          sp, 4(sp)
+                    sw          fp, 8(sp)
                 """);
         for (int i = 0; i < ctx.args().expr().size(); i++) {
-            sb.append(visit(ctx.args().expr(i)));
-            sb.append(String.format("""
-                        PushARG      a%1d
-                    """, i));}
+            sb.append(visit(ctx.args().expr(i)));}
         sb.append(String.format("""
                     jal         %s
                 """, ctx.ID().getText()));
         sb.append("""
-                    lw          sp 4(fp)
-                    lw          fp 0(fp)
-                    lw          ra 0(sp)
-                    sw          a0 -4(fp)
+                    lw          ra, 0(sp)
+                    lw          sp, 4(sp)
+                    lw          fp, 8(sp)
+                    addi        sp, sp, -12
                 """);
         //regOffset.push(regOffset.peek() + ctx.args().expr().size());
         return sb.toString();}
-    @Override
-    public String visitParamdecla(InterpreterParser.ParamdeclaContext ctx) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < ctx.ID().size(); ++i) {
-            sb.append(String.format("""
-                    lw          x%2d, 4(sp)
-                    addi        sp, sp, 4
-                    """,i + regOffset.peek()));
-            registers.peek().put(ctx.ID(i).getText(), i + regOffset.peek());}
-        return sb.toString();}
     //COMPLETED METHODS
+    //#################################################################################################
     @Override
     public String visitVardecla(InterpreterParser.VardeclaContext ctx) {
         StringBuilder sb = new StringBuilder();
@@ -305,10 +299,13 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
         sb.append(ctx.getText());
         return sb.toString();}
     //USELESS METHODS
+    //###############################################################################################
     @Override
     public String visitArgs(InterpreterParser.ArgsContext ctx) {return null;}
     @Override
     public String visitSpace(InterpreterParser.SpaceContext ctx) {return null;}
+    @Override
+    public String visitParamdecla(InterpreterParser.ParamdeclaContext ctx) {return null;}
     @Override
     public String visitNewline(InterpreterParser.NewlineContext ctx) {return null;}
     @Override

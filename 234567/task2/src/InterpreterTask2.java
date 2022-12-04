@@ -43,12 +43,6 @@ public class InterpreterTask2 {
                         addi        sp, sp, 4
                     .end_macro
                     
-                    .macro    PushARG    $arg
-                        lw          $arg, 4(sp)
-                        sw          $arg, 0(sp)
-                        addi        sp, sp, 4
-                    .end_macro
-                    
                     .macro CompGE
                         Popt1t2
                         li          t0, 1
