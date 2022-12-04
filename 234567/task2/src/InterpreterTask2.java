@@ -17,8 +17,8 @@ public class InterpreterTask2 {
                     .text
                     
                     .macro    PushImm        $number
-                        li          t0, $number
-                        sw          t0, (sp)
+                        li          t5, $number
+                        sw          t5, (sp)
                         addi        sp, sp, -4
                     .end_macro
                     

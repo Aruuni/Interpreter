@@ -107,21 +107,26 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
         //TODO finish
         StringBuilder sb = new StringBuilder();
         sb.append("""
-                    addi        sp, sp, 12
+                    mv          t2, sp
                     sw          ra, 0(sp)
-                    sw          sp, 4(sp)
-                    sw          fp, 8(sp)
+                    addi        sp, sp, 4
+                    sw          t2, 0(sp)
+                    addi        sp, sp, 4
+                    sw          fp, 0(sp)
+                    mv          fp, sp
                 """);
         for (int i = 0; i < ctx.args().expr().size(); i++) {
-            sb.append(visit(ctx.args().expr(i)));}
+            sb.append(visit(ctx.args().expr(i)));
+            sb.append("""
+                    addi        sp, sp, -4
+                """);}
         sb.append(String.format("""
-                    jal         %s
+                    call        %s
                 """, ctx.ID().getText()));
         sb.append("""
-                    lw          ra, 0(sp)
-                    lw          sp, 4(sp)
-                    lw          fp, 8(sp)
-                    addi        sp, sp, -12
+                    lw          ra, 4(sp)
+                    lw          fp, 0(sp)
+                    lw          sp, 0(sp)
                 """);
         //regOffset.push(regOffset.peek() + ctx.args().expr().size());
         return sb.toString();}

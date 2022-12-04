@@ -4,8 +4,9 @@ int main(int i) {
 printhello()
 }
 
-unit printhello(){
+int printhello(){
     print 50;
-    print newline
+    print newline;
+    8
 
 }
