@@ -14,10 +14,10 @@ paramdecla
     :(type ID (COMMA type ID)*)?
 ;
 body
-    :LBRACE vardecla ene RBRACE
+    :LBRACE vardecla* ene RBRACE
 ;
 vardecla
-    :(type ID Assign expr SEMICOLON)*
+    :type ID Assign expr SEMICOLON
 ;
 block
     :LBRACE ene RBRACE

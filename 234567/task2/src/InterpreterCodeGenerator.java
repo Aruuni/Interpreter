@@ -1,54 +1,127 @@
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-
+import javax.swing.*;
 import java.util.*;
 public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> implements InterpreterVisitor<String>{
-    private final Stack<HashMap<String, Integer>> registers = new Stack<>();
+    public final Stack<HashMap<String, Integer>> registers = new Stack<>();
     private final Stack<Integer> regOffset = new Stack<>();
     private Integer labelCounter = 0;
     private final Stack<Integer> numOfArgs = new Stack<>();
+    //NEEDS ATTENTION
     @Override
     public String visitProgram(InterpreterParser.ProgramContext ctx) {
+        //TODO check is stacks are actually needed
         StringBuilder sb = new StringBuilder();
-        sb.append("""
-                    b main
-                """);
         for (InterpreterParser.DeclaContext declaration : ctx.decla()) {
             registers.push(new HashMap<>());
-            regOffset.push(10);
+            regOffset.push(15);
             labelCounter =0;
             numOfArgs.push(declaration.paramdecla().ID().size());
-            sb.append(visit(declaration));
-            regOffset.pop();
-            registers.pop();
-            numOfArgs.pop();}
+            sb.append(visit(declaration));}
         return sb.toString();}
     @Override
     public String visitDecla(InterpreterParser.DeclaContext ctx) {
         if (numOfArgs.peek() + registers.peek().size() > 22) {throw new RuntimeException("Too many local variables.");}
         StringBuilder sb = new StringBuilder();
-        //TODO these are the registers that are used for the arguments
+        //TODO make this compatible with function calls
         sb.append(String.format("""
                 %s:
                     lw          ra, 4(sp)
                     addi        sp, sp, 4
                 """, ctx.ID().getText()));
-        for (int i = 0; i < numOfArgs.size(); ++i) {
+        for (int i = 0; i < ctx.paramdecla().ID().size(); ++i) {
             registers.peek().put(ctx.paramdecla().ID(i).getText(), i + regOffset.peek());
-            sb.append(
-                    String.format("""
-                                        lw          x%2d, 4(sp)
-                                        addi        sp, sp, 4
-                                    """,i + regOffset.peek()));}
-        regOffset.push(regOffset.peek() + numOfArgs.peek());
-        sb.append("""
+            sb.append(String.format("""
+                    lw          x%2d, 4(sp)
                     addi        sp, sp, 4
-                """);
-        //TODO come back
+                """,i + regOffset.peek()));}
+        regOffset.push(regOffset.peek() + numOfArgs.peek());
         sb.append(visit(ctx.body()));
+        sb.append("""
+                ret
+            """);
     return sb.toString();}
 
+    @Override
+    public String visitParens(InterpreterParser.ParensContext ctx) {
+        //TODO fix make equal and test le, ge , rest should be fine
+        StringBuilder sb = new StringBuilder();
+        sb.append(visit(ctx.expr(1)));
+        sb.append(visit(ctx.expr(0)));
+        return switch (((TerminalNode) (ctx.binop().getChild(0))).getSymbol().getType()) {
+            case InterpreterParser.Plus -> {
+                sb.append("""
+                    Plus
+                """);yield sb.toString();}
+            case InterpreterParser.Minus -> {
+                sb.append("""
+                    Minus
+                """);yield sb.toString();}
+            case InterpreterParser.Mult -> {
+                sb.append("""
+                    Multiply
+                """);yield sb.toString();}
+            case InterpreterParser.Div -> {
+                sb.append("""
+                    Divide
+                """);yield sb.toString();}
+            case InterpreterParser.Equals -> {
+                sb.append("""
+                    Eql
+                """);yield sb.toString();}
+            case InterpreterParser.LessThan -> {
+                sb.append("""
+                    CompL
+                """);yield sb.toString();}
+            case InterpreterParser.MoreThan -> {
+                sb.append("""
+                    CompG
+                """);yield sb.toString();}
+            case InterpreterParser.LessThanEq -> {
+                sb.append("""
+                    CompLE
+                """);yield sb.toString();}
+            case InterpreterParser.MoreThanEq -> {
+                sb.append("""
+                    CompGE
+                """);yield sb.toString();}
+            case InterpreterParser.AND -> {
+                sb.append("""
+                    LogicalAnd
+                """);yield sb.toString();}
+            case InterpreterParser.OR -> {
+                sb.append("""
+                    Or
+                """);yield sb.toString();}
+            case InterpreterParser.XOR -> {
+                sb.append("""
+                    LogicalXor
+                """);yield sb.toString();}
+        default -> throw new RuntimeException();};}
+    @Override
+    public String visitFunctionCall(InterpreterParser.FunctionCallContext ctx) {
+        //TODO finish
+        StringBuilder sb = new StringBuilder();
+        sb.append("""
+                    PreCall
+                """);
+        for (int i = 0; i < ctx.args().expr().size(); i++) {
+            sb.append(visit(ctx.args().expr(i)));
+            sb.append(String.format("""
+                        PushARG      a%1d
+                    """, i));}
+        sb.append(String.format("""
+                    jal         %s
+                """, ctx.ID().getText()));
+        sb.append("""
+                    lw          sp 4(fp)
+                    lw          fp 0(fp)
+                    lw          ra 0(sp)
+                    sw          a0 -4(fp)
+                """);
+        //regOffset.push(regOffset.peek() + ctx.args().expr().size());
+        return sb.toString();}
     @Override
     public String visitParamdecla(InterpreterParser.ParamdeclaContext ctx) {
         StringBuilder sb = new StringBuilder();
@@ -59,136 +132,26 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
                     """,i + regOffset.peek()));
             registers.peek().put(ctx.ID(i).getText(), i + regOffset.peek());}
         return sb.toString();}
+    //COMPLETED METHODS
     @Override
-    public String visitBody(InterpreterParser.BodyContext ctx) {
+    public String visitVardecla(InterpreterParser.VardeclaContext ctx) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < ctx.vardecla().type().size(); i++) {
-            registers.peek().put(ctx.vardecla().ID(i).getText(), regOffset.peek()+i);
-            sb.append(ctx.vardecla().expr(i));
-            sb.append(String.format("""
-                    lw          x%2d, 0(sp)
-                    addi        sp, sp, -4
-                    """,regOffset.peek()+i));}
-
-        regOffset.push(regOffset.peek() + ctx.vardecla().type().size());
-        return visit(ctx.ene());}
-    @Override
-    public String visitVardecla(InterpreterParser.VardeclaContext ctx) {return null;}
-    @Override
-    public String visitBlock(InterpreterParser.BlockContext ctx) {return visit(ctx.ene());}
-    @Override
-    public String visitEne(InterpreterParser.EneContext ctx) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < ctx.expr().size()-1; ++i) {
-            sb.append(visit(ctx.expr(i)));
-            System.out.println(ctx.expr(i).getText());}
-        sb.append(visit(ctx.expr(ctx.expr().size())));
-        sb.append("""
-                ret
-            """);
-        return sb.toString();}
-    @Override
-    public String visitIdentifier(InterpreterParser.IdentifierContext ctx) {
-        StringBuilder sb = new StringBuilder();
+        sb.append(visit(ctx.expr()));
         sb.append(String.format("""
-                    PushReg     x%2d
-                """,registers.peek().get(ctx.ID().getText())));
-        return sb.toString();}
-    @Override
-    public String visitInt(InterpreterParser.IntContext ctx) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(
-                String.format("""
-                    PushImm     %d
-                """, Integer.parseInt(ctx.getText())));
-        return sb.toString();}
-    @Override
-    public String visitBoolean(InterpreterParser.BooleanContext ctx) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(
-                String.format("""
-                    PushImm     %d
-                """, ctx.getText().equals("true") ? 1 : 0));
-        sb.append(ctx.getText());
+                    lw          x%2d, 4(sp)
+                    addi        sp, sp, 4
+                """,regOffset.peek()));
+        registers.peek().put(ctx.ID().getText(), regOffset.peek());
+        regOffset.push(regOffset.peek() + 1);
         return sb.toString();}
     @Override
     public String visitAssignment(InterpreterParser.AssignmentContext ctx) {
             StringBuilder sb = new StringBuilder();
-            //TODO double check this
             sb.append(visit(ctx.expr()));
-            registers.peek().put(ctx.ID().getText(), regOffset.peek());
-            regOffset.push(regOffset.peek() + 1);
             sb.append(String.format("""
-                    PushReg      x%2d
+                    PopReg      x%2d
                 """,registers.peek().get(ctx.ID().getText())));
             return sb.toString();}
-    @Override
-    public String visitParens(InterpreterParser.ParensContext ctx) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(visit(ctx.expr(1)));
-        sb.append(visit(ctx.expr(0)));
-        return switch (((TerminalNode) (ctx.binop().getChild(0))).getSymbol().getType()) {
-            case InterpreterParser.Plus -> {
-                sb.append("""
-                    Add
-                """);yield sb.toString();}
-            case InterpreterParser.Minus -> {
-                sb.append("""
-                    Sub
-                """);yield sb.toString();}
-            case InterpreterParser.Mult -> {
-                sb.append("""
-                    Mul
-                """);yield sb.toString();}
-            case InterpreterParser.Div -> {
-                sb.append("""
-                    Div
-                """);yield sb.toString();}
-            case InterpreterParser.Equals -> {
-                sb.append("""
-                    Eql
-                """);yield sb.toString();}
-            case InterpreterParser.LessThan -> {
-                sb.append("""
-                    Leq
-                """);yield sb.toString();}
-            case InterpreterParser.MoreThan -> {
-                sb.append("""
-                    Geq
-                """);yield sb.toString();}
-            case InterpreterParser.LessThanEq -> {
-                sb.append("""
-                    Lte
-                """);yield sb.toString();}
-            case InterpreterParser.MoreThanEq -> {
-                sb.append("""
-                    Gte
-                """);yield sb.toString();}
-            case InterpreterParser.AND -> {
-                sb.append("""
-                    And
-                """);yield sb.toString();}
-            case InterpreterParser.OR -> {
-                sb.append("""
-                    Or
-                """);yield sb.toString();}
-            case InterpreterParser.XOR -> {
-                sb.append("""
-                    Xor
-                """);yield sb.toString();}
-        default -> throw new RuntimeException();};}
-    @Override
-    public String visitFunctionCall(InterpreterParser.FunctionCallContext ctx) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < ctx.args().expr().size(); i++) {
-            sb.append(visit(ctx.args().expr(i)));
-            sb.append(String.format("""
-                    PopReg      a%2d
-                """,i+regOffset.peek()));}
-        sb.append(String.format("""
-                    jal         %s
-                """, ctx.ID().getText()));
-        return sb.toString();}
     @Override
     public String visitIfStatement(InterpreterParser.IfStatementContext ctx) {
         StringBuilder sb = new StringBuilder();
@@ -219,8 +182,8 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
     @Override
     public String visitWhileLoop(InterpreterParser.WhileLoopContext ctx) {
         StringBuilder sb = new StringBuilder();
-        String loopLabel = String.format("While_%d", labelCounter++);
-        String exitLabel = String.format("End-While_%d", labelCounter++);
+        String loopLabel = String.format("while_%d", labelCounter++);
+        String exitLabel = String.format("while_%d", labelCounter++);
         sb.append(
                 String.format("""
                 %s:
@@ -270,53 +233,85 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
                     """,exitLabel));
         return sb.toString();}
     @Override
+    public String visitBody(InterpreterParser.BodyContext ctx) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < ctx.vardecla().size(); i++) {
+            sb.append(visit(ctx.vardecla(i)));}
+        sb.append(visit(ctx.ene()));
+        return sb.toString();}
+    @Override
     public String visitPrint(InterpreterParser.PrintContext ctx) {
         StringBuilder sb = new StringBuilder();
-        sb.append(visit(ctx.expr()));
-        sb.append("""
-                Pop         x1
-                li          a0, 1
-                mv          a1, x1
-                jal         print
-            """);
+        if(ctx.expr().getText().equals("space")){
+            sb.append("""
+                    la          a0, space
+                    li          a7, 4
+                    ecall
+                """);
+            return sb.toString();}
+        else if(ctx.expr().getText().equals("newline")){
+            sb.append("""
+                    la          a0, newline
+                    li          a7, 4
+                    ecall
+                """);
+            return sb.toString();}
+        else{
+            sb.append(visit(ctx.expr()));
+            sb.append("""
+                    lw          a0, 4(sp)
+                    li          a7, 1
+                    ecall
+                """);}
+
         return sb.toString();}
     @Override
     public String visitSkip(InterpreterParser.SkipContext ctx) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("""
-                nop
-            """);
-        return sb.toString();}
+        return """
+                    nop
+                """;}
     @Override
     public String visitBlocks(InterpreterParser.BlocksContext ctx) {return visit(ctx.block());}
     @Override
-    public String visitArgs(InterpreterParser.ArgsContext ctx) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < ctx.expr().size(); i++) {
-            sb.append(String.format("""
-                        Push        %s
-                    """, ctx.expr(i).getText()));
-        }
-        return sb.toString();}
-
+    public String visitBlock(InterpreterParser.BlockContext ctx) {return visit(ctx.ene());}
     @Override
-    public String visitSpace(InterpreterParser.SpaceContext ctx) {
+    public String visitEne(InterpreterParser.EneContext ctx) {
         StringBuilder sb = new StringBuilder();
-        sb.append("""
-                PushImm     32
-                PrintChar
-            """);
+        for (int i = 0; i < ctx.expr().size(); ++i) {
+            sb.append(visit(ctx.expr(i)));}
         return sb.toString();}
     @Override
-    public String visitNewline(InterpreterParser.NewlineContext ctx) {
+    public String visitIdentifier(InterpreterParser.IdentifierContext ctx) {
         StringBuilder sb = new StringBuilder();
-        sb.append("""
-                PushImm     10
-                PrintChar
-            """);
+        sb.append(String.format("""
+                    PushReg     x%2d
+                """,registers.peek().get(ctx.ID().getText())));
         return sb.toString();}
+    @Override
+    public String visitInt(InterpreterParser.IntContext ctx) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(
+                String.format("""
+                    PushImm     %d
+                """, Integer.parseInt(ctx.getText())));
+        return sb.toString();}
+    @Override
+    public String visitBoolean(InterpreterParser.BooleanContext ctx) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(
+                String.format("""
+                    PushImm     %d
+                """, ctx.getText().equals("true") ? 1 : 0));
+        sb.append(ctx.getText());
+        return sb.toString();}
+    //USELESS METHODS
+    @Override
+    public String visitArgs(InterpreterParser.ArgsContext ctx) {return null;}
+    @Override
+    public String visitSpace(InterpreterParser.SpaceContext ctx) {return null;}
+    @Override
+    public String visitNewline(InterpreterParser.NewlineContext ctx) {return null;}
     @Override
     public String visitType(InterpreterParser.TypeContext ctx) {return null;}
     @Override
-    public String visitBinop(InterpreterParser.BinopContext ctx) {return null;}
-}
+    public String visitBinop(InterpreterParser.BinopContext ctx) {return null;}}

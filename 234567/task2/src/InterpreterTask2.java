@@ -11,6 +11,11 @@ public class InterpreterTask2 {
         InterpreterParser parser = new InterpreterParser(tokens);
         InterpreterParser.ProgramContext tree = parser.program();
         String stackMachineMacros = """
+                    .data
+                    space: .string " "
+                    newline: .string "\\n"
+                    .text
+                    
                     .macro    PushImm        $number
                         li          t0, $number
                         sw          t0, (sp)
@@ -38,17 +43,13 @@ public class InterpreterTask2 {
                         addi        sp, sp, 4
                     .end_macro
                     
-                    .macro Lte
-                        Popt1t2
-                        li          t0, 1
-                        sw          t0, (sp)
-                        ble         t1, t2, exit
-                        sw          zero, (sp)
-                    exit:
-                        addi        sp, sp, -4
+                    .macro    PushARG    $arg
+                        lw          $arg, 4(sp)
+                        sw          $arg, 0(sp)
+                        addi        sp, sp, 4
                     .end_macro
                     
-                    .macro Gte
+                    .macro CompGE
                         Popt1t2
                         li          t0, 1
                         sw          t0, (sp)
@@ -58,7 +59,7 @@ public class InterpreterTask2 {
                         addi        sp, sp, -4
                     .end_macro
                     
-                    .macro Lte
+                    .macro CompLE
                         Popt1t2
                         li          t0, 1
                         sw          t0, (sp)
@@ -67,82 +68,63 @@ public class InterpreterTask2 {
                     exit:
                         addi        sp, sp, -4
                     .end_macro
-                    .macro    Add
+                    
+                    .macro CompL
+                        Popt1t2
+                        li          t0, 1
+                        sw          t0, (sp)
+                        blt         t1, t2, exit
+                        sw          zero, (sp)
+                    exit:
+                        addi        sp, sp, -4
+                    .end_macro
+                    
+                    .macro CompG
+                        Popt1t2
+                        li          t0, 1
+                        sw          t0, (sp)
+                        blt         t2, t1, exit
+                        sw          zero, (sp)
+                    exit:
+                        addi        sp, sp, -4
+                    .end_macro
+                    
+                    .macro    Plus
                         Popt1t2
                         add         t1, t1, t2
                         sw          t1, (sp)
                         addi        sp, sp, -4
                     .end_macro
                     
-                    .macro    Sub
+                    .macro    Minus
                         Popt1t2
                         sub         t1, t1, t2
                         sw          t1, (sp)
                         addi        sp, sp, -4
                     .end_macro
                     
-                    .macro    Mul
+                    .macro    Multiply
                         Popt1t2
                         mul         t1, t1, t2
                         sw          t1, (sp)
                         addi        sp, sp, -4
                     .end_macro
                     
-                    .macro    Div
+                    .macro    Divide
                         Popt1t2
                         div         t1, t1, t2
                         sw          t1, (sp)
                         addi        sp, sp, -4
                     .end_macro
                     
-                    .macro    And
+                    .macro    LogicalAnd
                         Popt1t2
                         and         t1, t1, t2
                         sw          t1, (sp)
                         addi        sp, sp, -4
                     .end_macro
-                   
-                    .macro    Eql
-                            Popt1t2
-                            beq         t1, t2, exit
-                            sw          zero, (sp)
-                            addi        sp, sp, -4
-                            j           exit2
-                        exit:
-                            li          t0, 1
-                            sw          t0, (sp)
-                            addi        sp, sp, -4
-                        exit2:
-                    .end_macro
-                    //not fine
-                    .macro Leq
-                        Popt1t2
-                        li          t0, 1
-                        sw          t0, (sp)
-                        ble         t2, t1, exit
-                        sw          zero, (sp)
-                    exit:
-                        addi        sp, sp, -4
-                    .end_macro
                     
-                    .macro Geq
-                        Popt1t2
-                        li          t0, 1
-                        sw          t0, (sp)
-                        ble         t2, t1, exit
-                        sw          zero, (sp)
-                    exit:
-                        addi        sp, sp, -4
-                    .end_macro
-                    
-                    .macro    Or
-                        Popt1t2
-                        or         t1, t1, t2
-                        sw          t1, (sp)
-                        addi        sp, sp, -4
-                    .end_macro
-                    
-                    .macro    Xor
+                    .macro    LogicalXor
                         Popt1t2
                         xor         t1, t1, t2
                         sw          t1, (sp)
@@ -160,14 +142,16 @@ public class InterpreterTask2 {
                         j           $address
                     exit:
                     .end_macro
-                    
                     """;
         FileWriter writer = new FileWriter("output.txt");
         InterpreterCodeGenerator codegen = new InterpreterCodeGenerator();
-        StringBuilder code = new StringBuilder();
-        writer.write(code.append(codegen.visit(tree)).toString());
+        String stackMachineCode = codegen.visit(tree);
+
+        String out = stackMachineMacros + stackMachineCode;
+        System.out.println(out);
+
+        writer.write(out);
         writer.close();
-        System.out.println(stackMachineMacros + codegen.visit(tree));
 
     }
 }

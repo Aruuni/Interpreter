@@ -1,17 +1,12 @@
-int main(int n) {
-    int i := 0;
-    while (i < n) do {
-        print_row(i);
-        i := (i + 1)
+  int main() {
+    int i := 50;
+    int j := 100;
+    int k := 150;
+    int l := 200;
+    int m := 250;
+    while (i >= 0) do {
+      i := (i - 1);
+      print i;
+      print newline
     };
-    0
-}
-
-unit print_row(int n) {
-    int i := 0;
-    while (i < n) do {
-        print 1;
-        i := (i + 1)
-    };
-    print newline
-}
+    i }
