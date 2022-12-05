@@ -30,6 +30,11 @@ newline: .string "\n"
     addi        sp, sp, 4
 .end_macro
 
+.macro    Pop1
+    lw          t4, 4(sp)
+    addi        sp, sp, 4
+.end_macro
+
 .macro CompGE
     Popt1t2
     li          t0, 1
@@ -136,6 +141,7 @@ main:
     lw          a0, 4(sp)
     li          a7, 1
     ecall
+    Pop1
     mv          t2, sp
     sw          ra, 0(sp)
     addi        sp, sp, 4
@@ -144,18 +150,17 @@ main:
     sw          fp, 0(sp)
     mv          fp, sp
     call        printhello
-    lw          ra, 4(sp)
-    lw          fp, 0(sp)
-    lw          sp, 0(sp)
+    lw          sp, -4(sp)
+    lw          ra, 0(sp)
+    lw          fp, 0(fp)
     ret
 printhello:
-    lw          ra, 4(sp)
-    addi        sp, sp, 4
     addi        sp, sp, 4
     PushImm     50
     lw          a0, 4(sp)
     li          a7, 1
     ecall
+    Pop1
     la          a0, newline
     li          a7, 4
     ecall

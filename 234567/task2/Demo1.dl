@@ -1,7 +1,7 @@
 int main(int i) {
          int j := 50;
          print i;
-printhello()
+         printhello()
 }
 
 int printhello(){

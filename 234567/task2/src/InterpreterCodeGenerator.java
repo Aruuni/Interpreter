@@ -25,11 +25,17 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
         if (numOfArgs.peek() + registers.peek().size() > 28) {throw new RuntimeException("Too many local variables.");}
         StringBuilder sb = new StringBuilder();
         //TODO make this compatible with function calls
-        sb.append(String.format("""
+        if(ctx.ID().getText().equals("main")){
+            sb.append("""
+              main:
+                  lw          ra, 4(sp)
+                  addi        sp, sp, 4
+                """);}
+        else {
+            sb.append(String.format("""
                 %s:
-                    lw          ra, 4(sp)
-                    addi        sp, sp, 4
                 """, ctx.ID().getText()));
+        }
         for (int i = 0; i < ctx.paramdecla().ID().size(); ++i) {
             registers.peek().put(ctx.paramdecla().ID(i).getText(), i + regOffset.peek());
             sb.append(String.format("""
@@ -124,9 +130,9 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
                     call        %s
                 """, ctx.ID().getText()));
         sb.append("""
-                    lw          ra, 4(sp)
-                    lw          fp, 0(sp)
-                    lw          sp, 0(sp)
+                    lw          sp, -4(sp)
+                    lw          ra, 0(sp)
+                    lw          fp, 0(fp)
                 """);
         //regOffset.push(regOffset.peek() + ctx.args().expr().size());
         return sb.toString();}
@@ -261,6 +267,7 @@ public class InterpreterCodeGenerator extends AbstractParseTreeVisitor<String> i
                     lw          a0, 4(sp)
                     li          a7, 1
                     ecall
+                    Pop1
                 """);}
 
         return sb.toString();}

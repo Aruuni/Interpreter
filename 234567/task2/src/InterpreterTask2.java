@@ -43,6 +43,11 @@ public class InterpreterTask2 {
                         addi        sp, sp, 4
                     .end_macro
                     
+                    .macro    Pop1
+                        lw          t4, 4(sp)
+                        addi        sp, sp, 4
+                    .end_macro
+                    
                     .macro CompGE
                         Popt1t2
                         li          t0, 1
