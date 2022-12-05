@@ -22,4 +22,4 @@ echo ---------------------
 echo(
 echo Output:
 echo(
-cmd /c "type .\task2\Demo1.dl | .\gradlew -q :task2:run |   "C:\Users\mihai\.jdks\corretto-17.0.5-1\bin\java" -cp .\rars_27a7c1f.jar .\RARSInterface.java 69"
+cmd /c "type .\task2\Demo1.dl | .\gradlew -q :task2:run |   "C:\Users\mihai\.jdks\corretto-17.0.5\bin\java" -cp .\rars_27a7c1f.jar .\RARSInterface.java 10"

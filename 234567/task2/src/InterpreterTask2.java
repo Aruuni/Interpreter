@@ -11,6 +11,7 @@ public class InterpreterTask2 {
         InterpreterParser parser = new InterpreterParser(tokens);
         InterpreterParser.ProgramContext tree = parser.program();
         String stackMachineMacros = """
+                    .global main
                     .data
                     space: .string " "
                     newline: .string "\\n"
@@ -73,6 +74,16 @@ public class InterpreterTask2 {
                         li          t0, 1
                         sw          t0, (sp)
                         blt         t1, t2, exit
+                        sw          zero, (sp)
+                    exit:
+                        addi        sp, sp, -4
+                    .end_macro
+                    
+                    .macro Equal
+                        Popt1t2
+                        li          t0, 1
+                        sw          t0, (sp)
+                        beq         t1, t2, exit
                         sw          zero, (sp)
                     exit:
                         addi        sp, sp, -4

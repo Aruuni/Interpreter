@@ -1,3 +1,4 @@
+.global main
 .data
 space: .string " "
 newline: .string "\n"
@@ -60,6 +61,16 @@ exit:
     li          t0, 1
     sw          t0, (sp)
     blt         t1, t2, exit
+    sw          zero, (sp)
+exit:
+    addi        sp, sp, -4
+.end_macro
+
+.macro Equal
+    Popt1t2
+    li          t0, 1
+    sw          t0, (sp)
+    beq         t1, t2, exit
     sw          zero, (sp)
 exit:
     addi        sp, sp, -4
@@ -134,35 +145,25 @@ main:
     lw          x18, 4(sp)
     addi        sp, sp, 4
     addi        sp, sp, 4
-    PushImm     50
-    lw          x19, 4(sp)
-    addi        sp, sp, 4
+if_0:
+    PushImm     0
+    PushReg     x18
+    CompL
+    PushImm 1
+    Equal
+    JumpTrue   else_1
+    PushImm     1
+    lw          a0, 4(sp)
+    li          a7, 1
+    ecall
+    Pop1
+    Jump        endif_2
+else_1:
     PushReg     x18
     lw          a0, 4(sp)
     li          a7, 1
     ecall
     Pop1
-    mv          t2, sp
-    sw          ra, 0(sp)
-    addi        sp, sp, 4
-    sw          t2, 0(sp)
-    addi        sp, sp, 4
-    sw          fp, 0(sp)
-    mv          fp, sp
-    call        printhello
-    lw          sp, -4(sp)
-    lw          ra, 0(sp)
-    lw          fp, 0(fp)
-    ret
-printhello:
-    addi        sp, sp, 4
-    PushImm     50
-    lw          a0, 4(sp)
-    li          a7, 1
-    ecall
-    Pop1
-    la          a0, newline
-    li          a7, 4
-    ecall
-    PushImm     8
+endif_2:
+    PushReg     x18
     ret
