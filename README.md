@@ -1,2 +1,2 @@
 # Interpreter
-This is an interpreter that I has to make as a school project using the antlr library. 
+This is an interpreter of a simple programming language implemented using thr Antlr library. It performs type chacking then it execuetds the code. 
